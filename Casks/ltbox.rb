@@ -12,15 +12,17 @@ cask "ltbox" do
     strategy :github_latest
   end
 
-  depends_on macos: ">= :big_sur"
+  depends_on macos: :big_sur
 
   app "LTBox.app"
 
   # The release bundle is ad-hoc signed before it is archived. Add the
   # package-manager marker to the staged bundle, then refresh that ad-hoc
-  # signature while preserving the USB entitlement.
+  # signature while preserving the USB entitlement. The marker must be a
+  # resource: codesign treats anything under Contents/MacOS as a code object
+  # and refuses to sign a bundle containing an unsigned one.
   preflight do
-    (staged_path/"LTBox.app/Contents/MacOS/ltbox.install-source").write("homebrew")
+    (staged_path/"LTBox.app/Contents/Resources/ltbox.install-source").write("homebrew")
     system_command "/usr/bin/codesign",
                    args: [
                      "--force",
@@ -42,11 +44,10 @@ cask "ltbox" do
 
   caveats <<~EOS
     LTBox is ad-hoc signed, not Developer ID signed, and is not notarized.
-    Install it without Gatekeeper quarantine with:
 
-      brew install --cask --no-quarantine miner7222/tap/ltbox
-
-    If it was already installed with quarantine enabled, remove that attribute with:
+    Homebrew no longer applies Gatekeeper quarantine to casks, so no extra
+    step is normally needed. If macOS still refuses to open the app, clear the
+    attribute once with:
 
       xattr -dr com.apple.quarantine /Applications/LTBox.app
   EOS
