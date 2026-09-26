@@ -1,6 +1,6 @@
 cask "ltbox" do
-  version "3.3.2"
-  sha256 "5d4e143337e46608c6d52b58e9e127c1275a5875a029b19293a5bef8b8ad276d"
+  version "3.3.3"
+  sha256 "005ef704f97130d2d54e1142c2f29e159a744c0fe3e2f91da2fecfe169f63444"
 
   url "https://github.com/miner7222/LTBox/releases/download/v#{version}/LTBox-macos_universal-v#{version}.tar.gz"
   name "LTBox"
